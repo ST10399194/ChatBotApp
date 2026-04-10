@@ -3,6 +3,11 @@
 ##Project Overview
 This is a C# Chatbot application that features user profile management, basic input validation, and audio greeting integration.
 
+##ASCII art implementation
+The UI class contains ASCII art , which is displayed at the beginning of the project once it runs.
+
+![GitHub Actions Build Status](./ascii-art-text.png)
+
 ##CI/CD Implementation
 The project uses GitHub Actions to automate the build process. Below is the confirmation of a successful build:
 
