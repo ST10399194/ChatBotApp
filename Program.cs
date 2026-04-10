@@ -27,6 +27,6 @@ class Program
         
         Chatbot chatbot = new Chatbot(user);    
         // starts the chatbot conversation loop
-        chatbot.StartConversation();
+        chatbot.StartChat();
     }
 }
