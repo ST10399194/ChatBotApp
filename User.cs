@@ -1,7 +1,7 @@
 using System;
 
 namespace ChatBotApp;
-
+//user profile logic
 public class User
 {
     //placeholder for user name, to personalize the bot's responses
