@@ -4,6 +4,7 @@
 namespace ChatBotApp;
 class Program
 {
+    //main chat logic
     static void Main(string[] args)
     {   
         //Plays a welcome sound effect
