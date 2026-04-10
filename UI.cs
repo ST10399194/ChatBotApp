@@ -8,7 +8,9 @@ public class UI
 {
 public static void DisplayAsciiArt()
 {
+// Set text color to dark green for the main ASCII banner
     Console.ForegroundColor = ConsoleColor.DarkGreen;
+    //prints the ASCII art
     Console.WriteLine(@"
                                                                                                                               
        _____    _____      _____       _____        ______        _____               _____          _____   _________________ 
