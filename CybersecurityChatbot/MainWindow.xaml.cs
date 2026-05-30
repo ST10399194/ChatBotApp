@@ -85,21 +85,27 @@ namespace CybersecurityChatbot
             AsciiArtDisplay.Text = _chatBot.GetAsciiArt();
         }
 
-        
+
         // Handles the Send button click — delegates to SendMessage.
-        private void SendButton_Click(object sender, RoutedEventArgs e)
+        private async void SendButton_Click(
+              object sender,
+              RoutedEventArgs e)
         {
-            // Forward the click to the shared send routine
-            SendMessage();
+            await SendMessage();
         }
 
-        
+
+
         // Handles the Enter key in the input box — delegates to SendMessage.       
-        private void UserInput_KeyDown(object sender, KeyEventArgs e)
+        private async void UserInput_KeyDown(object sender, KeyEventArgs e)   
         {
             // Only act on the Enter key; ignore all other keys
             if (e.Key == Key.Enter)
-                SendMessage();
+            {
+                e.Handled = true;
+                await SendMessage();
+            }
+                
         }
 
         
