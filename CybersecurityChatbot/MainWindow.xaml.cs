@@ -56,7 +56,8 @@ namespace CybersecurityChatbot
             Run label = new Run("CYBER BOT\n")
             {
                 Foreground = Brushes.Cyan,
-                FontWeight = FontWeights.Bold
+                FontWeight = FontWeights.Bold,
+                FontSize = 12
             };
 
             Run text = new Run("")
@@ -72,6 +73,9 @@ namespace CybersecurityChatbot
             foreach (char c in fullMessage)
             {
                 text.Text += c;
+
+                ChatDisplay.ScrollToEnd();
+
                 await Task.Delay(15);
             }
 
@@ -140,16 +144,10 @@ namespace CybersecurityChatbot
             // Clear the input field ready for the next message
             UserInput.Clear();
 
-            AppendMessage("Bot", "Typing...");
+            await Task.Delay(300);
 
-            await Task.Delay(1000);
+            await TypeBotMessage(_chatBot.ProcessInput(input));
 
-            ChatDisplay.Document.Blocks.Remove(
-                ChatDisplay.Document.Blocks.LastBlock);
-
-            string response = _chatBot.ProcessInput(input);
-
-            await TypeBotMessage(response);
         }
 
 
@@ -165,7 +163,8 @@ namespace CybersecurityChatbot
                 Run label = new Run("YOU\n")
                 {
                     Foreground = Brushes.Cyan,
-                    FontWeight = FontWeights.Bold
+                    FontWeight = FontWeights.Bold,
+                    FontSize = 12
                 };
 
                 Run text = new Run(message)

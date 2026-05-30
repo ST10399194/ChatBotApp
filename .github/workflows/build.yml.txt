@@ -1,0 +1,28 @@
+Name: .NET Core Desktop Build
+
+On:
+  Push:
+    Branches: [ “master”, “main” ]
+  Pull_request:
+    Branches: [ “master”, “main” ]
+
+Jobs:
+  Build:
+    Runs-on: windows-latest
+
+    Steps:
+-	Uses: actions/checkout@v4
+    
+-	Name: Setup .NET
+
+      Uses: actions/setup-dotnet@v4
+      With:
+        Dotnet-version: 8.0.x
+        
+-	Name: Restore dependencies
+      Run: dotnet restore
+      
+-	Name: Build
+      Run: dotnet build –no-restore –configuration Debug
+ 
+
