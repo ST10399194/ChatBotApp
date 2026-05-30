@@ -30,9 +30,21 @@ namespace CybersecurityChatbot
 
             // Show the chatbot's text greeting in the chat area
             AppendMessage("Bot", _chatBot.GetGreeting());
+
+
+        }
+        private void BorderlessBubble(
+            Paragraph paragraph,
+            Run text,
+            string color)
+        {
+            text.Background =
+                (SolidColorBrush)new BrushConverter().ConvertFromString(color);
+
+            paragraph.Inlines.Add(text);
         }
 
-        
+
         private void PlayVoiceGreeting()
         {
             try
