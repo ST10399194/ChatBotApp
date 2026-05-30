@@ -48,21 +48,35 @@ namespace CybersecurityChatbot
         }
         private async Task TypeBotMessage(string fullMessage)
         {
-            string current = "";
+            Paragraph paragraph = new Paragraph
+            {
+                TextAlignment = TextAlignment.Left
+            };
+
+            Run label = new Run("CYBER BOT\n")
+            {
+                Foreground = Brushes.Cyan,
+                FontWeight = FontWeights.Bold
+            };
+
+            Run text = new Run("")
+            {
+                Foreground = Brushes.White
+            };
+
+            paragraph.Inlines.Add(label);
+            paragraph.Inlines.Add(text);
+
+            ChatDisplay.Document.Blocks.Add(paragraph);
 
             foreach (char c in fullMessage)
             {
-                current += c;
-
-                if (ChatDisplay.Document.Blocks.LastBlock != null)
-                    ChatDisplay.Document.Blocks.Remove(ChatDisplay.Document.Blocks.LastBlock);
-
-                AppendMessage("Bot", current);
-
+                text.Text += c;
                 await Task.Delay(15);
             }
-        }
 
+            ChatDisplay.ScrollToEnd();
+        }
 
         private void PlayVoiceGreeting()
         {
