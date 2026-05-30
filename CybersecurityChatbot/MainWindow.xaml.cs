@@ -7,13 +7,13 @@ using System.Windows.Media;
 
 namespace CybersecurityChatbot
 {
-    
+
     public partial class MainWindow : Window
     {
         // The chatbot that owns all conversational logic
         private readonly ChatBot _chatBot;
 
-       
+
         public MainWindow()
         {
             // Build the WPF visual tree defined in MainWindow.xaml
@@ -29,7 +29,10 @@ namespace CybersecurityChatbot
             LoadAsciiArt();
 
             // Show the chatbot's text greeting in the chat area
-            AppendMessage("Bot", _chatBot.GetGreeting());
+            Loaded += async (s, e) =>
+            {
+                await TypeBotMessage(_chatBot.GetGreeting());
+            };
 
 
         }
@@ -77,7 +80,7 @@ namespace CybersecurityChatbot
             }
         }
 
-        
+
         // Asks the ChatBot for the ASCII art string and writes it to the header control.       
         private void LoadAsciiArt()
         {
@@ -97,7 +100,7 @@ namespace CybersecurityChatbot
 
 
         // Handles the Enter key in the input box — delegates to SendMessage.       
-        private async void UserInput_KeyDown(object sender, KeyEventArgs e)   
+        private async void UserInput_KeyDown(object sender, KeyEventArgs e)
         {
             // Only act on the Enter key; ignore all other keys
             if (e.Key == Key.Enter)
@@ -105,13 +108,13 @@ namespace CybersecurityChatbot
                 e.Handled = true;
                 await SendMessage();
             }
-                
+
         }
 
-        
-        
+
+
         /// Reads the user's input, passes it to ChatBot, and displays both sides.     
-        private async void SendMessage()
+        private async Task SendMessage()
         {
             // Read and trim the input field; do nothing if it is blank
             string input = UserInput.Text.Trim();
@@ -135,10 +138,9 @@ namespace CybersecurityChatbot
             await TypeBotMessage(response);
         }
 
-       
+
+
         private void AppendMessage(string sender, string message)
-        {
-            private void AppendMessage(string sender, string message)
         {
             Paragraph paragraph = new Paragraph();
 
@@ -159,7 +161,10 @@ namespace CybersecurityChatbot
 
                 BorderlessBubble(paragraph, text, "#00FFFF");
 
-                paragraph.Inlines.InsertBefore(paragraph.Inlines.FirstInline, label);
+                if (paragraph.Inlines.FirstInline != null)
+                    paragraph.Inlines.InsertBefore(paragraph.Inlines.FirstInline, label);
+                else
+                    paragraph.Inlines.Add(label);
             }
             else
             {
@@ -178,12 +183,16 @@ namespace CybersecurityChatbot
 
                 BorderlessBubble(paragraph, text, "#1E3A5F");
 
-                paragraph.Inlines.InsertBefore(paragraph.Inlines.FirstInline, label);
+                if (paragraph.Inlines.FirstInline != null)
+                    paragraph.Inlines.InsertBefore(paragraph.Inlines.FirstInline, label);
+                else
+                    paragraph.Inlines.Add(label);
             }
 
             ChatDisplay.Document.Blocks.Add(paragraph);
             ChatDisplay.ScrollToEnd();
         }
     }
-    }
+}
+    
 
