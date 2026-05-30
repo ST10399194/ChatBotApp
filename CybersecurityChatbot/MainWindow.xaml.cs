@@ -1,6 +1,9 @@
 ﻿using System.Media;
 using System.Windows;
 using System.Windows.Input;
+using System.Threading.Tasks;
+using System.Windows.Documents;
+using System.Windows.Media;
 
 namespace CybersecurityChatbot
 {
@@ -96,11 +99,52 @@ namespace CybersecurityChatbot
        
         private void AppendMessage(string sender, string message)
         {
-            // Append the formatted line to the chat text block
-            ChatDisplay.Text += $"{sender}: {message}\n\n";
+            private void AppendMessage(string sender, string message)
+        {
+            Paragraph paragraph = new Paragraph();
 
-            // Keep the latest message visible by scrolling the container to its end
-            ChatScrollViewer.ScrollToEnd();
+            if (sender == "You")
+            {
+                paragraph.TextAlignment = TextAlignment.Right;
+
+                Run label = new Run("YOU\n")
+                {
+                    Foreground = Brushes.Cyan,
+                    FontWeight = FontWeights.Bold
+                };
+
+                Run text = new Run(message)
+                {
+                    Foreground = Brushes.Black
+                };
+
+                BorderlessBubble(paragraph, text, "#00FFFF");
+
+                paragraph.Inlines.InsertBefore(paragraph.Inlines.FirstInline, label);
+            }
+            else
+            {
+                paragraph.TextAlignment = TextAlignment.Left;
+
+                Run label = new Run("CYBER BOT\n")
+                {
+                    Foreground = Brushes.Cyan,
+                    FontWeight = FontWeights.Bold
+                };
+
+                Run text = new Run(message)
+                {
+                    Foreground = Brushes.White
+                };
+
+                BorderlessBubble(paragraph, text, "#1E3A5F");
+
+                paragraph.Inlines.InsertBefore(paragraph.Inlines.FirstInline, label);
+            }
+
+            ChatDisplay.Document.Blocks.Add(paragraph);
+            ChatDisplay.ScrollToEnd();
         }
     }
-}
+    }
+
