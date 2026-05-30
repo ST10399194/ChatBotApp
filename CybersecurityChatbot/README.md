@@ -19,7 +19,7 @@ An interactive C# WPF desktop assistant that identifies security topics, tracks 
 ### Modern Frontend User Interface
 * **WPF Interface Layout:** Built with native XAML files. Features an organized header pane, a central conversation logs area, and user input fields.
 * **Async Typing Animation:** Uses non-blocking thread scheduling (`Task.Delay`). Delivers text characters sequentially to mimic human chat habits.
-* **Custom Chat Bubbles:** Styled text initialization fields. Highlights bot output using 🤖 symbols in Cyan and user blocks with 👤 symbols in bold.
+* **Custom Chat Bubbles:** Styled text initialization fields. Highlights bot output  in Cyan and user blocks  in bold.
 * **Viewport Synchronization:** Automated view scroll management. Forces the RichTextBox text canvas view to lock down instantly on new entries.
 
 ---
@@ -67,7 +67,6 @@ git clone https://github.com
 
 ### GitHub Actions Build Status
 ![GitHub Actions Workflow Status](github_actions_tick.png)
-*(Note: Capture your GitHub repository's Actions tab showing a green checkmark, save it as "github_actions_tick.png", and push it.)*
 
 ### YouTube Demonstration Link
 * Unlisted Walkthrough Video: [Insert Your Unlisted YouTube Video URL Here]
