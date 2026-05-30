@@ -43,6 +43,22 @@ namespace CybersecurityChatbot
 
             paragraph.Inlines.Add(text);
         }
+        private async Task TypeBotMessage(string fullMessage)
+        {
+            string current = "";
+
+            foreach (char c in fullMessage)
+            {
+                current += c;
+
+                if (ChatDisplay.Document.Blocks.LastBlock != null)
+                    ChatDisplay.Document.Blocks.Remove(ChatDisplay.Document.Blocks.LastBlock);
+
+                AppendMessage("Bot", current);
+
+                await Task.Delay(15);
+            }
+        }
 
 
         private void PlayVoiceGreeting()
