@@ -38,21 +38,14 @@
         </StackPanel>
 
         <!-- Row 1: Chat history -->
-        <ScrollViewer x:Name="ChatScrollViewer"
-                      Grid.Row="1"
-                      VerticalScrollBarVisibility="Auto"
-                      Background="#0A0E1A"
-                      Margin="12,8,12,8">
-            <TextBox x:Name="ChatDisplay"
-                     IsReadOnly="True"
-                     TextWrapping="Wrap"
-                     Background="Transparent"
-                     Foreground="#E0E0E0"
-                     BorderThickness="0"
-                     FontSize="13"
-                     FontFamily="Consolas"
-                     Padding="4"/>
-        </ScrollViewer>
+        <RichTextBox x:Name="ChatDisplay"
+             Grid.Row="1"
+             Margin="12,8,12,8"
+             IsReadOnly="True"
+             Background="#0A0E1A"
+             Foreground="White"
+             BorderThickness="0"
+             VerticalScrollBarVisibility="Auto"/>
 
         <!-- Row 2: Input row -->
         <Grid Grid.Row="2" Margin="12,4,12,12">
