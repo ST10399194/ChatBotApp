@@ -105,7 +105,7 @@ namespace CybersecurityChatbot
         
         
         /// Reads the user's input, passes it to ChatBot, and displays both sides.     
-        private void SendMessage()
+        private async void SendMessage()
         {
             // Read and trim the input field; do nothing if it is blank
             string input = UserInput.Text.Trim();
@@ -117,11 +117,16 @@ namespace CybersecurityChatbot
             // Clear the input field ready for the next message
             UserInput.Clear();
 
-            // Delegate all response logic to ChatBot
+            AppendMessage("Bot", "Typing...");
+
+            await Task.Delay(1000);
+
+            ChatDisplay.Document.Blocks.Remove(
+                ChatDisplay.Document.Blocks.LastBlock);
+
             string response = _chatBot.ProcessInput(input);
 
-            // Display the bot's reply
-            AppendMessage("Bot", response);
+            await TypeBotMessage(response);
         }
 
        
