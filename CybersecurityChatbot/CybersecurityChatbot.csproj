@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="github_actions_tick.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
