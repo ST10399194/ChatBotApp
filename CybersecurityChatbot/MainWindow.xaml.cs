@@ -14,11 +14,16 @@ namespace CybersecurityChatbot
         // The chatbot that owns all conversational logic
         private readonly ChatBot _chatBot;
 
-        // Step 2.2: The manager engine handling CRUD and business workflow orchestration
+        //  The manager engine handling CRUD and business workflow orchestration
         private readonly TaskManager _taskManager;
+
+        private readonly QuizManager _quizManager;
 
         public MainWindow()
         {
+            _quizManager =  new QuizManager();
+            DisplayCurrentQuestion();
+
             // Build the WPF visual tree defined in MainWindow.xaml
             InitializeComponent();
 
@@ -289,5 +294,112 @@ namespace CybersecurityChatbot
                 MessageBox.Show("Please select a valid entry grid element line to remove.", "Selection Required", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
+        private void DisplayCurrentQuestion()
+        {
+            QuizQuestion current = _quizManager.GetCurrentQuestion();
+
+            if (current == null || _quizManager.IsFinished())
+            {
+                ShowFinalResults();
+                return;
+            }
+
+            // Reset layout UI elements
+            txtQuizFeedback.Text = "";
+            btnSubmitAnswer.Visibility = Visibility.Visible;
+            btnNextQuestion.Visibility = Visibility.Collapsed;
+
+            // Uncheck radio selection items
+            rbOptionA.IsChecked = false;
+            rbOptionB.IsChecked = false;
+            rbOptionC.IsChecked = false;
+            rbOptionD.IsChecked = false;
+
+            // Map Question Data text content
+            txtQuizQuestion.Text = current.Question;
+
+            // Handle True/False rendering configurations (Requirement check)
+            if (current.IsTrueFalse)
+            {
+                rbOptionA.Content = current.Options[0]; // True
+                rbOptionB.Content = current.Options[1]; // False
+                rbOptionC.Visibility = Visibility.Collapsed; // Hide extra indices
+                rbOptionD.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                rbOptionA.Content = $"A) {current.Options[0]}";
+                rbOptionB.Content = $"B) {current.Options[1]}";
+                rbOptionC.Content = $"C) {current.Options[2]}";
+                rbOptionD.Content = $"D) {current.Options[3]}";
+
+                rbOptionC.Visibility = Visibility.Visible;
+                rbOptionD.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void btnSubmitAnswer_Click(object sender, RoutedEventArgs e)
+        {
+            string selected = "";
+            QuizQuestion current = _quizManager.GetCurrentQuestion();
+
+            if (current.IsTrueFalse)
+            {
+                if (rbOptionA.IsChecked == true) selected = "True";
+                else if (rbOptionB.IsChecked == true) selected = "False";
+            }
+            else
+            {
+                if (rbOptionA.IsChecked == true) selected = "A";
+                else if (rbOptionB.IsChecked == true) selected = "B";
+                else if (rbOptionC.IsChecked == true) selected = "C";
+                else if (rbOptionD.IsChecked == true) selected = "D";
+            }
+
+            if (string.IsNullOrEmpty(selected))
+            {
+                MessageBox.Show("Please select an answer choice option first.", "Selection Missing");
+                return;
+            }
+
+            // Route answers down to the score evaluation engine
+            bool correct = _quizManager.SubmitAnswer(selected);
+
+            // Render outcome strings inside feedback pane
+            txtQuizFeedback.Text = _quizManager.GetFeedback(correct);
+            txtQuizScore.Text = $"Score: {_quizManager.GetFinalScore()}";
+
+            // Toggle button visibilities
+            btnSubmitAnswer.Visibility = Visibility.Collapsed;
+            btnNextQuestion.Visibility = Visibility.Visible;
+        }
+
+        private void btnNextQuestion_Click(object sender, RoutedEventArgs e)
+        {
+            DisplayCurrentQuestion();
+        }
+
+        private void ShowFinalResults()
+        {
+            pnlQuizActive.Visibility = Visibility.Collapsed;
+            pnlQuizResults.Visibility = Visibility.Visible;
+
+            txtFinalScore.Text = $"Your Final Score: {_quizManager.GetFinalScore()}";
+            txtFinalMessage.Text = _quizManager.GetFinalMessage();
+        }
+
+        private void btnResetQuiz_Click(object sender, RoutedEventArgs e)
+        {
+            _quizManager.ResetQuiz();
+            txtQuizScore.Text = "Score: 0 / 16";
+
+            pnlQuizResults.Visibility = Visibility.Collapsed;
+            pnlQuizActive.Visibility = Visibility.Visible;
+
+            DisplayCurrentQuestion();
+        }
+
+
+
     }
 }
