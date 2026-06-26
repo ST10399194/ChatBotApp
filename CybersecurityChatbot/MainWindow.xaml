@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="CyberSecurity Bot"
-        Height="700" Width="900"
+        Height="700" Width="1050"
         Background="#0A0E1A"
         FontFamily="Consolas">
 
@@ -13,9 +13,13 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Row 0: Header -->
-        <StackPanel Grid.Row="0" Background="#0D1B2A" Margin="0,0,0,4">
+        <Grid.ColumnDefinitions>
+            <Grid.ColumnDefinition Width="2*"/>
+            <Grid.ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
 
+        <!-- Row 0: Header (Spans across both columns) -->
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Background="#0D1B2A" Margin="0,0,0,4">
             <TextBlock Text="⚡ CyberSecurity Bot"
                        Foreground="#00FFFF"
                        FontSize="22"
@@ -37,18 +41,91 @@
             <Rectangle Height="1" Fill="#1E3A5F" Margin="12,0,12,0"/>
         </StackPanel>
 
-        <!-- Row 1: Chat history -->
+        <!-- Row 1, Column 0: Chat history -->
         <RichTextBox x:Name="ChatDisplay"
-             Grid.Row="1"
-             Margin="12,8,12,8"
-             IsReadOnly="True"
-             Background="#0A0E1A"
-             Foreground="White"
-             BorderThickness="0"
-             VerticalScrollBarVisibility="Auto"/>
+                     Grid.Row="1" Grid.Column="0"
+                     Margin="12,8,6,8"
+                     IsReadOnly="True"
+                     Background="#0D1B2A"
+                     Foreground="White"
+                     BorderBrush="#1E3A5F"
+                     BorderThickness="1"
+                     VerticalScrollBarVisibility="Auto"/>
 
-        <!-- Row 2: Input row -->
-        <Grid Grid.Row="2" Margin="12,4,12,12">
+        <!-- Row 1, Column 1: Task Assistant Panel -->
+        <Border Grid.Row="1" Grid.Column="1" 
+                Background="#0D1B2A" 
+                BorderBrush="#1E3A5F" 
+                BorderThickness="1" 
+                Margin="6,8,12,8" 
+                CornerRadius="4">
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Task Title Input -->
+                <StackPanel Grid.Row="0" Margin="0,4">
+                    <Label Content="Task Title:" Foreground="#00FFFF" Padding="0,2"/>
+                    <TextBox x:Name="TxtTaskTitle" Background="#0A0E1A" Foreground="White" BorderBrush="#1E3A5F" Height="25"/>
+                </StackPanel>
+
+                <!-- Task Description Input -->
+                <StackPanel Grid.Row="1" Margin="0,4">
+                    <Label Content="Description:" Foreground="#00FFFF" Padding="0,2"/>
+                    <TextBox x:Name="TxtTaskDescription" Background="#0A0E1A" Foreground="White" BorderBrush="#1E3A5F" Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
+                </StackPanel>
+
+                <!-- Task Reminder Input -->
+                <StackPanel Grid.Row="2" Margin="0,4">
+                    <Label Content="Reminder (e.g. 'In 7 days'):" Foreground="#00FFFF" Padding="0,2"/>
+                    <TextBox x:Name="TxtTaskReminder" Background="#0A0E1A" Foreground="White" BorderBrush="#1E3A5F" Height="25"/>
+                </StackPanel>
+
+                <!-- Action Button: Add Task -->
+                <Button x:Name="BtnAddTask" Grid.Row="3" Content="Add Task" Height="28" Margin="0,8,0,8" 
+                        Background="#00FFFF" Foreground="#0A0E1A" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="BtnAddTask_Click"/>
+
+                <!-- Display Control: DataGrid -->
+                <DataGrid x:Name="DgTasks" Grid.Row="4" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                          Background="#0A0E1A" BorderBrush="#1E3A5F" Foreground="White" RowBackground="#0D1B2A" AlternativeRowBackground="#0A0E1A" HeadersVisibility="Column">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="#1E3A5F"/>
+                            <Setter Property="Foreground" Value="#00FFFF"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter Property="Padding" Value="4"/>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="30"/>
+                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="90"/>
+                        <DataGridTextColumn Header="Reminder" Binding="{Binding Reminder}" Width="90"/>
+                        <DataGridTextColumn Header="Done" Binding="{Binding IsComplete}" Width="50"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Management Actions -->
+                <Grid Grid.Row="5" Margin="0,8,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="BtnMarkComplete" Grid.Column="0" Content="Complete" Height="28" Margin="0,0,4,0" 
+                            Background="#1E3A5F" Foreground="#00FFFF" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="BtnMarkComplete_Click"/>
+                    <Button x:Name="BtnDeleteTask" Grid.Column="1" Content="Delete" Height="28" Margin="4,0,0,0" 
+                            Background="#FFD32F2F" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="BtnDeleteTask_Click"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- Row 2: Input row (Spans across the chat area) -->
+        <Grid Grid.Row="2" Grid.Column="0" Margin="12,4,6,12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -82,4 +159,8 @@
         </Grid>
     </Grid>
 </Window>
+
+
+
+
 
