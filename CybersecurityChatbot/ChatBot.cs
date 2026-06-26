@@ -234,5 +234,127 @@ namespace CybersecurityChatbot
             // No special phrase matched
             return null;
         }
+        public string ProcessInput(string userInput)
+        {
+            // Standardize string input parsing casing
+            string input = userInput.ToLower().Trim();
+
+            // CHECK FOR LOG / SUMMARY INTENT
+          
+            if (input.Contains("show activity log") || input.Contains("what have you done") ||
+                input.Contains("what did you do") || input.Contains("show log") || input.Contains("recent actions"))
+            {
+                return ActivityLogger.GetRecentLog();
+            }
+
+            
+            //  CHECK FOR TASK INTENT
+           
+            if (input.Contains("add task") || input.Contains("add a task") || input.Contains("create task") ||
+                input.Contains("i need to") || input.Contains("enable") || input.Contains("set up"))
+            {
+                string taskDescription = ExtractTaskDescription(userInput);
+
+                // Add default reminder state flag text
+                _taskManager.AddTask(taskDescription, "Created via conversational NLP stream.", "None");
+                ActivityLogger.Log($"Task added: '{taskDescription}' (no reminder set).");
+
+                return $"Task added: '{taskDescription}.' Would you like to set a reminder for this task?";
+            }
+
+            
+            // CHECK FOR REMINDER INTENT
+           
+            if (input.Contains("remind me") || input.Contains("reminder") || input.Contains("set a reminder") ||
+                input.Contains("remind me to") || input.Contains("don't forget"))
+            {
+                string reminderDetails = ExtractReminderDetails(userInput);
+
+                _taskManager.AddTask("Reminder Task", reminderDetails, "Tomorrow");
+                ActivityLogger.Log($"Reminder set for '{reminderDetails}' tomorrow.");
+
+                return $"Reminder set for '{reminderDetails}' on tomorrow's date.";
+            }
+
+            //  CHECK FOR QUIZ INTENT
+           
+            if (input.Contains("start quiz") || input.Contains("take quiz") || input.Contains("test my knowledge") ||
+                input.Contains("quiz me") || input.Contains("play the game"))
+            {
+                return "Understood. Launching the Cybersecurity Evaluation Quiz! Please navigate to the 'Security Quiz' tab on the right side of your panel panel area to begin.";
+            }
+
+            
+            // FALL THROUGH TO EXISTING CYBERSECURITY TOPICS / FALLBACK
+            
+            if (input.Contains("password"))
+                return "Security Protocol Note: Always keep passwords above 12 characters and use randomized phrase strings.";
+            if (input.Contains("phishing"))
+                return "Security Protocol Note: Check domain records carefully before providing session credentials.";
+            if (input.Contains("2fa") || input.Contains("two-factor"))
+                return "Security Protocol Note: Multi-factor authentication adds cryptographic barriers against session hijacking.";
+            if (input.Contains("malware"))
+                return "Security Protocol Note: Isolate infected segments immediately from standard network trees.";
+
+            // Fallback response pattern matching
+            return "I did not quite understand that. Try asking me to 'add a task', 'set a reminder', 'show activity log', or 'start quiz'.";
+        }
+
+       
+        // NLP STRING MANIPULATION EXTRACTION HELPERS
+        
+
+        private string ExtractTaskDescription(string fullInput)
+        {
+            string lower = fullInput.ToLower();
+            string keyPhrase = "";
+
+            if (lower.Contains("add a task to ")) keyPhrase = "add a task to ";
+            else if (lower.Contains("add task to ")) keyPhrase = "add task to ";
+            else if (lower.Contains("i need to ")) keyPhrase = "i need to ";
+            else if (lower.Contains("create task ")) keyPhrase = "create task ";
+
+            if (!string.IsNullOrEmpty(keyPhrase))
+            {
+                int startIndex = lower.IndexOf(keyPhrase) + keyPhrase.Length;
+                if (startIndex < fullInput.Length)
+                {
+                    string extracted = fullInput.Substring(startIndex).Trim();
+                    return CapitalizeFirstLetter(extracted);
+                }
+            }
+
+            return "Configure Security Optimization Setting"; // Fallback text value
+        }
+
+        private string ExtractReminderDetails(string fullInput)
+        {
+            string lower = fullInput.ToLower();
+            string keyPhrase = "";
+
+            if (lower.Contains("remind me to ")) keyPhrase = "remind me to ";
+            else if (lower.Contains("remind me ")) keyPhrase = "remind me ";
+
+            if (!string.IsNullOrEmpty(keyPhrase))
+            {
+                int startIndex = lower.IndexOf(keyPhrase) + keyPhrase.Length;
+                string segment = fullInput.Substring(startIndex).Trim();
+
+                // Strip trailing timing punctuation identifiers like "tomorrow" to mirror assignment outputs
+                if (segment.ToLower().EndsWith(" tomorrow.")) segment = segment.Substring(0, segment.Length - 10).Trim();
+                else if (segment.ToLower().EndsWith(" tomorrow")) segment = segment.Substring(0, segment.Length - 9).Trim();
+
+                return CapitalizeFirstLetter(segment);
+            }
+
+            return "Update security parameters"; // Fallback value
+        }
+
+        private string CapitalizeFirstLetter(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return text;
+            return char.ToUpper(text[0]) + text.Substring(1);
+        }
     }
 }
+
