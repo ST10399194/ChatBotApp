@@ -9,7 +9,7 @@ using System.Windows.Controls;
 
 namespace CybersecurityChatbot
 {
-    public class MainWindow : Window
+    public partial class MainWindow : Window
     {
         // The chatbot that owns all conversational logic
         private readonly ChatBot _chatBot;

@@ -10,7 +10,7 @@ namespace CybersecurityChatbot
 {
     public class TaskStorageHelper
     {
-        Private const string FilePath = “tasks.json”;
+        private const string FilePath = "tasks.json";
 
 
         // Reads the storage file and parses it into a list of tasks
@@ -38,7 +38,7 @@ namespace CybersecurityChatbot
         {
             try
             {
-                string json = JsonConvert.SerializeObject(tasks, Formatting.Indented);
+               
                 File.WriteAllText(FilePath, json);
             }
             catch (Exception ex)
